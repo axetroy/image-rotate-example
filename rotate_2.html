@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Rotate</title>
+  </head>
+  <body>
+    <div style="width: 500px; height: 500px; margin: 0 auto">
+      <canvas id="canvas" style="border: 1px solid red"></canvas>
+
+      <button id="button">开始旋转</button>
+    </div>
+
+    <script>
+      let timer;
+      var canvas = document.getElementById("canvas");
+      var ctx = canvas.getContext("2d");
+      const img = new Image();
+
+      img.onload = function () {
+        canvas.setAttribute("width", this.width);
+        canvas.setAttribute("height", this.height);
+        console.log(this);
+        ctx.drawImage(this, 0, 0);
+      };
+
+      img.src = "./123.png";
+
+      document.getElementById("button").onclick = function () {
+        canvas.setAttribute("width", img.height);
+        canvas.setAttribute("height", img.width);
+        function rotate(deg) {
+          console.log(deg);
+          ctx.clearRect(0, 0, canvas.width, canvas.height);
+          ctx.rotate((deg * Math.PI) / 180);
+          ctx.drawImage(img, 0, -img.height);
+
+          // reset current transformation matrix to the identity matrix
+          ctx.setTransform(1, 0, 0, 1, 0, 0);
+          timer = setTimeout(function () {
+            if (deg < 90) {
+              rotate(++deg);
+            }
+          }, 16);
+        }
+
+        clearTimeout(timer);
+        rotate(0);
+      };
+    </script>
+  </body>
+</html>
